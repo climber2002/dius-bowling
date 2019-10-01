@@ -16,6 +16,10 @@ class BowlingGame
     frames[index]
   end
 
+  def score
+    frames.reduce(0) { |sum, frame| sum + frame.score }
+  end
+
   def total_pins_after_frame(current_frame_index, bowls_count)
     bowls = []
     frame_index = current_frame_index + 1

@@ -145,6 +145,54 @@ describe BowlingGame do
     end
   end
 
+  describe '#score' do
+    context 'when roll 3 non strike nor spare' do
+      before do
+        subject.roll(3)
+        subject.roll(5)
+
+        subject.roll(2)
+        subject.roll(4)
+
+        subject.roll(3)
+        subject.roll(4)
+      end
+
+      it 'the score is total score of the 3 frames' do
+        expect(subject.score).to eq (8 + 6 + 7)
+      end
+    end
+    
+    context 'when roll 3 strike' do
+      before do
+        subject.roll(10)
+        subject.roll(10)
+        subject.roll(10)
+      end
+
+      it 'the score is total score of the 3 frames' do
+        expect(subject.score).to eq (30 + 20 + 10)
+      end
+    end
+
+    context 'when roll a sqare, two non strikes nor sqares' do
+      before do
+        subject.roll(7)
+        subject.roll(3)
+
+        subject.roll(2)
+        subject.roll(3)
+        
+        subject.roll(4)
+        subject.roll(5)
+      end
+
+      it 'the score is total score of the 3 frames' do
+        expect(subject.score).to eq (12 + 5 + 9)
+      end
+    end
+  end
+
   describe '#total_pins_after_frame' do
     let(:current_frame_index) { 0 }
 
