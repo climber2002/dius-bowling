@@ -1,11 +1,11 @@
 class Frame
   attr_reader :index, :bowling_game, :bowls
 
-  # the Frame index starts at 0
-  def initialize(index, bowling_game)
-    @index = index
+  def initialize(bowling_game)
     @bowling_game = bowling_game
     @bowls = []
+    @index = bowling_game.frames.length
+    @bowling_game.frames << self
   end
 
   def roll(no_of_pins)
@@ -18,5 +18,15 @@ class Frame
 
   def strike?
     bowls[0] == 10
+  end
+
+  def spare?
+    !strike? && total_pins == 10
+  end
+
+  private
+
+  def total_pins
+    bowls.reduce(0) { |sum, pins| sum + pins }
   end
 end

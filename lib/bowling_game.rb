@@ -19,11 +19,7 @@ class BowlingGame
   private
 
   def current_frame
-    return @current_frame if @current_frame
-
-    @current_frame = Frame.new(frames.length, self)
-    frames << @current_frame
-    @current_frame
+    @current_frame ||= Frame.new(self)
   end
 
   def clear_current_frame
