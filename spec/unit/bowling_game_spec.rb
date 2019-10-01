@@ -144,4 +144,67 @@ describe BowlingGame do
       end
     end
   end
+
+  describe '#total_pins_after_frame' do
+    let(:current_frame_index) { 0 }
+
+    before do
+      subject.roll(10)
+    end
+
+    context 'when bowls_count is 1' do
+      let(:bowls_count) { 1 }
+
+      context 'when there is no frames after the current frame' do
+        it 'returns 0' do
+          expect(subject.total_pins_after_frame(current_frame_index, bowls_count)).to eq 0
+        end
+      end
+
+      context 'when there is a frame after current frame' do
+        before do
+          subject.roll(3)
+          subject.roll(4)
+        end
+
+        it 'returns the no of pins in first bowl of the next frame' do
+          expect(subject.total_pins_after_frame(current_frame_index, bowls_count)).to eq 3
+        end
+      end
+    end
+
+    context 'when bowls_count is 2' do
+      let(:bowls_count) { 2 }
+
+      context 'when there is no frames after the current frame' do
+        it 'returns 0' do
+          expect(subject.total_pins_after_frame(current_frame_index, bowls_count)).to eq 0
+        end
+      end
+
+      context 'when the next two bowls are in same frame' do
+        before do
+          subject.roll(3)
+          subject.roll(4)
+          subject.roll(5)
+        end
+
+        it 'returns the no of pins in first bowl of the next frame' do
+          expect(subject.total_pins_after_frame(current_frame_index, bowls_count)).to eq 7
+        end
+      end
+
+      context 'when the next two bowls are in different frames' do
+        before do
+          subject.roll(10)
+          subject.roll(4)
+          subject.roll(5)
+        end
+
+        it 'returns the no of pins in bowls of the next 2 frame' do
+          expect(subject.total_pins_after_frame(current_frame_index, bowls_count)).to eq 14
+        end
+      end
+    end
+  end
 end
