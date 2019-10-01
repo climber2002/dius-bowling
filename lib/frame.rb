@@ -19,11 +19,11 @@ class Frame
   end
 
   def strike?
-    bowls[0] == TOTAL_PINS_IN_A_FRAME
+    total_pins_of_first_n_bowls(1) == TOTAL_PINS_IN_A_FRAME
   end
 
   def spare?
-    !strike? && total_pins == TOTAL_PINS_IN_A_FRAME
+    !strike? && total_pins_of_first_n_bowls(2) == TOTAL_PINS_IN_A_FRAME
   end
 
   def score
@@ -35,7 +35,11 @@ class Frame
   private
 
   def total_pins
-    bowls.reduce(0) { |sum, pins| sum + pins }
+    total_pins_of_first_n_bowls(bowls.count)
+  end
+
+  def total_pins_of_first_n_bowls(bowls_count)
+    bowls.take(bowls_count).reduce(0) { |sum, pins| sum + pins }
   end
 
   def total_pins_after_me(bowls_count)
