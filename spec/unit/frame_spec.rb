@@ -91,4 +91,73 @@ describe Frame do
       it { expect(subject.complete?).to be_truthy }
     end
   end
+
+  describe '#score' do
+    subject { bowling_game.frame_at(0) }
+
+    context 'when roll a strike' do
+      before do
+        bowling_game.roll(10)
+      end
+
+      context 'when next two rolls are also strike' do
+        before do
+          bowling_game.roll(10)
+          bowling_game.roll(10)
+          bowling_game.roll(3)
+        end
+
+        it { expect(subject.score).to eq 30 }
+      end
+
+      context 'when next two rolls are not strike' do
+        before do
+          bowling_game.roll(5)
+          bowling_game.roll(4)
+          bowling_game.roll(3)
+        end
+
+        it { expect(subject.score).to eq 10 + 5 + 4 }
+      end
+    end
+
+    context 'when roll a spare' do
+      before do
+        bowling_game.roll(7)
+        bowling_game.roll(3)
+      end
+
+      context 'when next roll is strike' do
+        before do
+          bowling_game.roll(10)
+          bowling_game.roll(5)
+          bowling_game.roll(3)
+        end
+
+        it { expect(subject.score).to eq 10 + 10 }
+      end
+
+      context 'when next roll is NOT strike' do
+        before do
+          bowling_game.roll(4)
+          bowling_game.roll(5)
+          bowling_game.roll(3)
+        end
+
+        it { expect(subject.score).to eq 10 + 4 }
+      end
+    end
+
+    context 'when roll neither a spare nor a strike' do
+      before do
+        bowling_game.roll(5)
+        bowling_game.roll(3)
+
+        bowling_game.roll(10)
+        bowling_game.roll(5)
+      end
+
+      it { expect(subject.score).to eq 8 }
+    end
+  end
 end
