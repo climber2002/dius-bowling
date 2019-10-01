@@ -102,6 +102,23 @@ describe BowlingGame do
           expect(frame.complete?).to be_truthy
         end
       end
+
+      context 'when roll two 0 pins' do
+        before do
+          subject.roll(0)
+          subject.roll(0)
+        end
+
+        it 'creates one frame' do
+          expect(subject.frames.length).to eq 1
+        end
+
+        it 'has a spare frame' do
+          frame = subject.frame_at(0)
+          expect(frame.spare?).to be_falsy
+          expect(frame.complete?).to be_truthy
+        end
+      end
     end
 
     context 'when roll 3 times' do
@@ -141,6 +158,32 @@ describe BowlingGame do
         it 'has the second frame as NOT complete' do
           expect(subject.frame_at(1).complete?).to be_falsy
         end
+      end
+    end
+
+    context 'when roll into the last frame' do
+      before do
+        10.times { subject.roll(10) }
+      end
+
+      it 'should has first 9 frames as type Frame' do
+        (0..8).each do |index|
+          expect(subject.frame_at(index).class).to eq Frame
+        end
+      end
+
+      it 'should has last frame as type LastFrame' do
+        expect(subject.frame_at(9).class).to eq LastFrame
+      end
+    end
+
+    context 'when roll after the game completes' do
+      before do
+        12.times { subject.roll(10) }
+      end
+
+      it 'does not accept roll anymore' do
+        expect{ subject.roll(3) }.to change{ subject.score }.by(0)
       end
     end
   end
@@ -190,6 +233,62 @@ describe BowlingGame do
       it 'the score is total score of the 3 frames' do
         expect(subject.score).to eq (12 + 5 + 9)
       end
+    end
+  end
+
+  describe '#game_complete?' do
+    context 'when there are less than 10 frames' do
+      before do
+        subject.roll(10)
+        subject.roll(10)
+      end
+
+      it { expect(subject.game_complete?).to be_falsy }
+    end
+
+    context 'when there are 10 frames and the last frame is strike' do
+      before do
+        10.times { subject.roll(10) }
+      end
+
+      it { expect(subject.game_complete?).to be_falsy }
+
+      context 'then roll twice' do
+        before do
+          subject.roll(10)
+          subject.roll(5)
+        end
+
+        it { expect(subject.game_complete?).to be_truthy }
+      end
+    end
+
+    context 'when there are 10 frames and the last frame is spare' do
+      before do
+        9.times { subject.roll(10) }
+        subject.roll(7)
+        subject.roll(3)
+      end
+
+      it { expect(subject.game_complete?).to be_falsy }
+
+      context 'then roll once' do
+        before do
+          subject.roll(10)
+        end
+
+        it { expect(subject.game_complete?).to be_truthy }
+      end
+    end
+
+    context 'when there are 10 frames and the last frame is neither strike nor spare' do
+      before do
+        9.times { subject.roll(10) }
+        subject.roll(4)
+        subject.roll(3)
+      end
+
+      it { expect(subject.game_complete?).to be_truthy }
     end
   end
 
