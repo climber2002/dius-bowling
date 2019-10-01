@@ -7,7 +7,7 @@ class LastFrame < Frame
   end
 
   def spare?
-    !strike? && total_pins_of_first_n_bowls(2) == 10
+    !strike? && total_pins_of_first_n_bowls(2) == TOTAL_PINS_IN_A_FRAME
   end
 
   private

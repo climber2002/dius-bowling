@@ -1,4 +1,6 @@
 class Frame
+  TOTAL_PINS_IN_A_FRAME = 10
+
   attr_reader :index, :bowling_game, :bowls
 
   def initialize(bowling_game)
@@ -17,11 +19,11 @@ class Frame
   end
 
   def strike?
-    bowls[0] == 10
+    bowls[0] == TOTAL_PINS_IN_A_FRAME
   end
 
   def spare?
-    !strike? && total_pins == 10
+    !strike? && total_pins == TOTAL_PINS_IN_A_FRAME
   end
 
   def score
